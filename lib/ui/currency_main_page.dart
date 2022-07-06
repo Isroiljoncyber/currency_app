@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:currency_app/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -72,6 +70,7 @@ class _CurrencyMainPageState extends State<CurrencyMainPage> {
       var response =
           await get(Uri.parse("https://cbu.uz/oz/arkhiv-kursov-valyut/json/"));
       if (response.statusCode == 200) {
+        _listCurrency = [];
         for (final item in jsonDecode(response.body)) {
           var model = CurrencyModel.fromJson(item);
           if (model.ccy == "USD") {

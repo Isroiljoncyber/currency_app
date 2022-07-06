@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CurrencyListPage extends StatefulWidget {
-  final List<CurrencyModel> listCurrency;
+  final List<CurrencyModel> listCurrency ;
 
   const CurrencyListPage(this.listCurrency, {Key? key}) : super(key: key);
 
@@ -13,6 +13,39 @@ class CurrencyListPage extends StatefulWidget {
 }
 
 class _CurrencyListPageState extends State<CurrencyListPage> {
+  final TextEditingController _searchEditingController =
+      TextEditingController();
+
+  late List<CurrencyModel> searchList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    searchList.addAll(widget.listCurrency);
+    _searchEditingController.addListener(() {
+      if (_searchEditingController.text.isNotEmpty) {
+        searchList = [];
+        for (var element in widget.listCurrency) {
+          if (element.ccyNmEN.toString().toLowerCase().contains(
+              _searchEditingController.text.toString().toLowerCase())) {
+            searchList.add(element);
+          }
+        }
+      } else {
+        searchList = widget.listCurrency;
+      }
+      setState(() {
+        searchList;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchEditingController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,6 +58,8 @@ class _CurrencyListPageState extends State<CurrencyListPage> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: TextField(
+                  controller: _searchEditingController,
+                  enableSuggestions: false,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
@@ -49,17 +84,23 @@ class _CurrencyListPageState extends State<CurrencyListPage> {
                         Icons.close,
                         color: Colors.white,
                         size: 20,
-                      ), onPressed: () {  },
+                      ),
+                      onPressed: () {},
                     ),
                   ),
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      decoration: TextDecoration.none),
                 ),
               ),
               Flexible(
                 child: ListView.builder(
                   physics: BouncingScrollPhysics(),
-                  itemCount: widget.listCurrency.length,
+                  itemCount: searchList.length,
                   itemBuilder: ((context, index) =>
-                      _itemCurrency(widget.listCurrency[index])),
+                      _itemCurrency(searchList[index])),
                 ),
               ),
             ],

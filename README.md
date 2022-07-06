@@ -1,16 +1,4 @@
 # currency_app
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+ 
+ ![Screenshot from 2022-07-06 18-16-47](https://user-images.githubusercontent.com/65494864/177563319-b2131ab2-2122-4240-9747-a955d3f7793b.png)
+![Screenshot from 2022-07-06 18-18-24](https://user-images.githubusercontent.com/65494864/177563338-88e2e528-2e83-4f96-907c-f638c0781f2f.png)

@@ -1,7 +1,8 @@
-import 'package:currency_app/ui/currency_list_page.dart';
+import 'package:currency_app/domain/provider/currency_provider.dart';
 import 'package:currency_app/ui/currency_main_page.dart';
 import 'package:currency_app/utils/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,10 +13,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const CurrencyMainPage(),
-      onGenerateRoute: (setting) => Routes.generateRoute(setting),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<CurrencyProvider>(
+            create: (_) => CurrencyProvider())
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: const CurrencyMainPage(),
+        onGenerateRoute: (setting) => Routes.generateRoute(setting),
+      ),
     );
   }
 }

@@ -1,36 +1,45 @@
 import 'package:currency_app/domain/repos/network_repo_impl.dart';
 import 'package:flutter/material.dart';
 
-class CurrencyProvider extends ChangeNotifier implements SnackInterface {
+import '../../utils/routes.dart';
+import '../model/currency_model.dart';
+
+class CurrencyProvider extends ChangeNotifier {
   final TextEditingController editingControllerTop = TextEditingController();
   final TextEditingController editingControllerBottom = TextEditingController();
+  final TextEditingController searchEditingController = TextEditingController();
 
+  late List<CurrencyModel> searchList = [];
   final FocusNode topFocus = FocusNode();
   final FocusNode bottomFocus = FocusNode();
-  late NetworkRepoImpl networkRepoImpl;
+  late NetworkRepoImpl networkRepoImpl = NetworkRepoImpl();
+  late List<CurrencyModel> listCurrency = [];
+
+  CurrencyModel? currencyModelTop;
+  CurrencyModel? currencyModelBottom;
+
   bool isShowSnack = false;
+  bool isError = false;
   String snackMessage = '';
 
-  CurrencyProvider() {
-    networkRepoImpl = NetworkRepoImpl(this);
-  }
-
-  @override
-  changeSnackState({String message = ""}) {
-    isShowSnack = !isShowSnack;
-    if (isShowSnack) {
-      snackMessage = message;
+  Future initialLoading() async {
+    listCurrency.addAll(await networkRepoImpl.loadCurrencyDatesFormWeb());
+    for (final item in listCurrency) {
+      if (item.ccy == "USD") {
+        currencyModelTop = item;
+      } else if (item.ccy == "RUB") {
+        currencyModelBottom = item;
+      }
     }
     notifyListeners();
   }
 
-  addingListeners() {
+  addingMainPageListeners() {
     editingControllerTop.addListener(() {
       if (topFocus.hasFocus) {
         if (editingControllerTop.text.isNotEmpty) {
-          double sum = double.parse(
-                  networkRepoImpl.currencyModelTop?.rate ?? "0") /
-              double.parse(networkRepoImpl.currencyModelBottom?.rate ?? "0") *
+          double sum = double.parse(currencyModelTop?.rate ?? "0") /
+              double.parse(currencyModelBottom?.rate ?? "0") *
               double.parse(editingControllerTop.text);
           editingControllerBottom.text = sum.toStringAsFixed(2);
         } else {
@@ -42,10 +51,9 @@ class CurrencyProvider extends ChangeNotifier implements SnackInterface {
     editingControllerBottom.addListener(() {
       if (bottomFocus.hasFocus) {
         if (editingControllerBottom.text.isNotEmpty) {
-          double sum =
-              double.parse(networkRepoImpl.currencyModelBottom?.rate ?? "0") /
-                  double.parse(networkRepoImpl.currencyModelTop?.rate ?? "0") *
-                  double.parse(editingControllerBottom.text);
+          double sum = double.parse(currencyModelBottom?.rate ?? "0") /
+              double.parse(currencyModelTop?.rate ?? "0") *
+              double.parse(editingControllerBottom.text);
           editingControllerTop.text = sum.toStringAsFixed(2);
         } else {
           editingControllerTop.text = "";
@@ -54,14 +62,59 @@ class CurrencyProvider extends ChangeNotifier implements SnackInterface {
     });
   }
 
-  disposeListeners() {
+  disposeMainPageListeners() {
     editingControllerTop.removeListener(() {});
     editingControllerBottom.removeListener(() {});
     topFocus.dispose();
     bottomFocus.dispose();
   }
-}
 
-class SnackInterface {
-  changeSnackState({String message = ""}) {}
+  addingListPageListeners() {
+    searchList.addAll(listCurrency);
+    searchEditingController.addListener(() {
+      if (searchEditingController.text.isNotEmpty) {
+        searchList = [];
+        for (var element in listCurrency) {
+          if (element.ccyNmEN.toString().toLowerCase().contains(
+              searchEditingController.text.toString().toLowerCase())) {
+            searchList.add(element);
+          }
+        }
+      } else {
+        searchList = listCurrency;
+      }
+      notifyListeners();
+      // setState(() {
+      //   searchList;
+      // });
+    });
+  }
+
+  disposeListPageListeners() {
+    searchEditingController.dispose();
+  }
+
+  navigateTopListPageToChangeModel(
+      BuildContext context, String whichModel) async {
+    listCurrency = listCurrency;
+    var model = await Navigator.pushNamed(context, Routes.pageList);
+
+    if (model is CurrencyModel) {
+      if (whichModel.startsWith("top")) {
+        currencyModelTop = model;
+      } else {
+        currencyModelBottom = model;
+      }
+      notifyListeners();
+    }
+  }
+
+  changeCurrency() {
+    var model = currencyModelTop?.copyWith();
+    currencyModelTop = currencyModelBottom?.copyWith();
+    currencyModelBottom = model;
+    editingControllerTop.clear();
+    editingControllerBottom.clear();
+    notifyListeners();
+  }
 }

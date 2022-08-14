@@ -13,7 +13,8 @@ class Routes {
       switch (routeSettings.name) {
         case pageList:
           return MaterialPageRoute(
-              builder: (context) => CurrencyListPage(args?['currencyList']));
+              builder: (context) => const CurrencyListPage());
+          // args?['currencyList']
       }
     } catch (e) {
       print(e);

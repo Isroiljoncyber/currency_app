@@ -1,3 +1,4 @@
+import 'package:currency_app/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../domain/model/currency_model.dart';
@@ -58,7 +59,7 @@ Widget itemExchange(TextEditingController controller,
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: _picture(currencyModel!),
+                          child: pictureAssets(currencyModel!),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(right: 5, left: 5),
@@ -96,7 +97,7 @@ Widget itemExchange(TextEditingController controller,
   );
 }
 
-Widget _picture(CurrencyModel currencyModel) {
+Widget pictureAssets(CurrencyModel currencyModel) {
   String imgPath =
       "assets/${currencyModel.ccy?.substring(0, 2).toLowerCase()}.svg";
   return SvgPicture.asset(
@@ -106,21 +107,24 @@ Widget _picture(CurrencyModel currencyModel) {
   );
 }
 
-showMessage(BuildContext context, CurrencyProvider provider,
-    {bool isError = true}) {
-  if (provider.isShowSnack) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: isError ? Colors.redAccent : Colors.greenAccent,
-        content: Text(
-          provider.snackMessage,
-          style: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
-          ),
+showMessage({required String snackMessage, bool isError = false}) {
+  // if (provider.isShowSnack) {
+  final ScaffoldMessengerState scaffoldMessengerState =
+      scaffoldMessengerKey.currentState!;
+
+  scaffoldMessengerState.showSnackBar(
+    SnackBar(
+      backgroundColor: isError ? Colors.redAccent : Colors.greenAccent,
+      duration: Duration(seconds: isError ? 10:2),
+      content: Text(
+        snackMessage,
+        style: const TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w500,
         ),
       ),
-    );
-    provider.changeSnackState();
-  }
+    ),
+  );
+  // provider.changeSnackState();
+  // }
 }

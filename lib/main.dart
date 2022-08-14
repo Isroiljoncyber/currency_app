@@ -1,5 +1,6 @@
 import 'package:currency_app/domain/provider/currency_provider.dart';
 import 'package:currency_app/ui/currency_main_page.dart';
+import 'package:currency_app/utils/constants.dart';
 import 'package:currency_app/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
             create: (_) => CurrencyProvider())
       ],
       child: MaterialApp(
+        scaffoldMessengerKey: scaffoldMessengerKey,
         debugShowCheckedModeBanner: false,
         home: const CurrencyMainPage(),
         onGenerateRoute: (setting) => Routes.generateRoute(setting),

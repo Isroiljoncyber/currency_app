@@ -1,4 +1,5 @@
 import 'package:currency_app/domain/provider/currency_provider.dart';
+import 'package:currency_app/domain/repos/network_repo_impl.dart';
 import 'package:currency_app/ui/currency_main_page.dart';
 import 'package:currency_app/utils/constants.dart';
 import 'package:currency_app/utils/routes.dart';
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<CurrencyProvider>(
-            create: (_) => CurrencyProvider())
+            create: (_) => CurrencyProvider(NetworkRepoImpl()))
       ],
       child: MaterialApp(
         scaffoldMessengerKey: scaffoldMessengerKey,

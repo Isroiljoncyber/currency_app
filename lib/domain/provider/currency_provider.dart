@@ -5,14 +5,17 @@ import '../../utils/routes.dart';
 import '../model/currency_model.dart';
 
 class CurrencyProvider extends ChangeNotifier {
+  CurrencyProvider(this.networkRepoImpl);
+
   final TextEditingController editingControllerTop = TextEditingController();
   final TextEditingController editingControllerBottom = TextEditingController();
   final TextEditingController searchEditingController = TextEditingController();
 
-  late List<CurrencyModel> searchList = [];
   final FocusNode topFocus = FocusNode();
   final FocusNode bottomFocus = FocusNode();
-  late NetworkRepoImpl networkRepoImpl = NetworkRepoImpl();
+  final NetworkRepoImpl networkRepoImpl;
+
+  late List<CurrencyModel> searchList = [];
   late List<CurrencyModel> listCurrency = [];
 
   CurrencyModel? currencyModelTop;

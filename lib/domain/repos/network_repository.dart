@@ -1,6 +1,8 @@
 
-class NetworkRepository {
+import '../model/currency_model.dart';
 
-  loadCurrencyDatesFormWeb(){}
+abstract class NetworkRepository {
+
+  Future<List<CurrencyModel>> loadCurrencyDatesFormWeb();
 
 }

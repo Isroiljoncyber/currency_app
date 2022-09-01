@@ -1,5 +1,7 @@
 # Currency convert app with UI
 
+# Provider was used
+
 To convert your amount of money to another currency this app can help you to do so. 
 With a clear and beautuful ui and abundance possible currencies you never get stuck. 
 
